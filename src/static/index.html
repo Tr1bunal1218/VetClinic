@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление расписанием врачей</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Управление расписанием врачей</h1>
+
+        <!-- Форма для аутентификации -->
+        <div id="auth-form">
+            <h2>Вход</h2>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Пароль" required>
+            <button onclick="login()">Войти</button>
+        </div>
+
+        <div id="booking-form" style="display: none;">
+            <h2>Добавить запись</h2>
+            <select id="doctor-select" required>
+                <option value="" disabled selected>Выберите врача</option>
+            </select>
+            
+            <select id="pet-select" required>
+                <option value="" disabled selected>Выберите питомца</option>
+            </select>
+            
+            <input type="datetime-local" id="booking-time" required>
+            <button onclick="addBooking()">Добавить запись</button>
+        </div>
+
+        <div id="admin-panel" style="display: none;">
+            <h2>Управление расписаниями врачей</h2>
+            
+            <!-- Поиск расписания по ID врача -->
+            <div>
+                <button onclick="loadSchedules()">Загрузить расписание</button>
+            </div>
+        
+            <!-- Список расписаний -->
+            <div id="schedules-list"></div>
+        
+            <!-- Форма изменения расписания -->
+            <div id="schedule-form">
+                <!-- <h3>Изменить расписание</h3>
+                <input type="datetime-local" id="schedule-start" required>
+                <input type="datetime-local" id="schedule-end" required>
+                <!-- <input type="datetime-local" id="update-start" required>
+                <input type="datetime-local" id="update-end" required> --> -->
+                <!-- <button onclick="updateSchedule()">Обновить</button> -->
+            </div>
+        </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

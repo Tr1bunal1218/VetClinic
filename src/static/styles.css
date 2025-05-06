@@ -1,0 +1,204 @@
+/* Общие стили */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+}
+
+h2 {
+    color: #34495e;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.5em;
+}
+
+/* Стили для форм */
+#auth-form,
+#booking-form,
+#schedule-form {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Стили для инпутов */
+input:not([type="button"]):not([type="submit"]),
+select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+    outline: none;
+}
+
+/* Стили для кнопок */
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+/* Стили для datetime-local */
+input[type="datetime-local"] {
+    padding: 11px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 10px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    #auth-form,
+    #booking-form,
+    #schedule-form {
+        padding: 15px;
+    }
+}
+
+/* Дополнительные эффекты */
+select {
+    /* background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23757575"><path d="M7 10l5 5 5-5z"/></svg>'); */
+    background-position: right 12px center;
+    background-size: 15px;
+}
+
+input::placeholder {
+    color: #95a5a6;
+    opacity: 1;
+}
+
+/* Стили для номерного ввода */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#pet-select {
+    margin-top: 15px;
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23757575"><path d="M7 10l5 5 5-5z"/></svg>');
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.schedule-table td, .schedule-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.schedule-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.schedule-table button {
+    padding: 5px 10px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.schedule-table th:nth-child(1),
+.schedule-table td:nth-child(1) {
+    width: 100px;
+}
+
+.schedule-table th:nth-child(5),
+.schedule-table td:nth-child(5) {
+    width: 120px;
+}
+
+.schedule-table button {
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.schedule-table button:hover {
+    opacity: 0.8;
+}
+
+dialog {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+dialog form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+dialog label {
+    display: flex;
+    flex-direction: column;
+}
+
+dialog input[type="datetime-local"] {
+    padding: 8px;
+    margin-top: 4px;
+}
