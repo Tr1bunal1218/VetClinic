@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Форум о здоровье питомцев</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #fff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      width: 100%;
+      animation: fadeIn 0.6s ease-out;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00796b;
+      margin-bottom: 25px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #26a69a;
+      background-color: #fff;
+      transform: scale(1.02);
+      box-shadow: 0 0 5px rgba(38, 166, 154, 0.4);
+    }
+
+    button {
+      width: 100%;
+      background: #26a69a;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background: #1e8e82;
+      transform: scale(1.02);
+    }
+
+    .post {
+      background: #f1f8f9;
+      border-left: 4px solid #26a69a;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .post h3 {
+      margin: 0 0 8px;
+      color: #00796b;
+    }
+
+    .post p {
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    #formContainer {
+      margin-top: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .button-container {
+      margin-top: 20px;
+    }
+
+    .button-container button {
+      margin-bottom: 10px;
+    }
+
+    #goToReviewsBtn {
+      background: #833923;
+    }
+
+    #goToReviewsBtn:hover {
+      background: #931507;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Форум о здоровье питомцев</h1>
+
+  <div id="posts"></div>
+
+  <button id="showFormBtn">Добавить запись</button>
+
+  <div id="formContainer" class="hidden">
+    <input type="text" id="title" placeholder="Заголовок поста" />
+    <textarea id="content" placeholder="Содержание поста"></textarea>
+    <button id="submitBtn">Сохранить</button>
+  </div>
+
+  <!-- Контейнер для кнопок -->
+  <div class="button-container">
+    <button id="goToReviewsBtn">Перейти к отзывам</button>
+  </div>
+</div>
+
+<script>
+  const postsContainer = document.getElementById("posts");
+  const showFormBtn = document.getElementById("showFormBtn");
+  const formContainer = document.getElementById("formContainer");
+  const submitBtn = document.getElementById("submitBtn");
+  const titleInput = document.getElementById("title");
+  const contentInput = document.getElementById("content");
+  const goToReviewsBtn = document.getElementById("goToReviewsBtn");
+
+  function fetchPosts() {
+    fetch("/api/forum")
+      .then(res => res.json())
+      .then(data => {
+      postsContainer.innerHTML = "";
+      data.reverse().forEach(post => {
+        const div = document.createElement("div");
+        div.className = "post";
+        div.innerHTML = `<h3>${post.title}</h3><p>${post.content}</p>`;
+        postsContainer.appendChild(div);
+      });
+    })
+      .catch(err => {
+      console.error("Ошибка при загрузке постов:", err);
+    });
+  }
+
+  showFormBtn.addEventListener("click", () => {
+    formContainer.classList.toggle("hidden");
+  });
+
+  submitBtn.addEventListener("click", () => {
+    const newPost = {
+      title: titleInput.value.trim(),
+      content: contentInput.value.trim()
+    };
+
+    if (!newPost.title || !newPost.content) return;
+
+    fetch("/api/forum", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newPost)
+    })
+      .then(res => res.json())
+      .then(() => {
+      titleInput.value = "";
+      contentInput.value = "";
+      formContainer.classList.add("hidden");
+      fetchPosts();
+    })
+      .catch(err => {
+      console.error("Ошибка при отправке поста:", err);
+    });
+  });
+
+  // Переход к странице с отзывами
+  goToReviewsBtn.addEventListener("click", () => {
+    window.location.href = "index.html"; // Переход на страницу с отзывами
+  });
+
+  // Загрузка при старте
+  fetchPosts();
+</script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Отзывы</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #fff);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 0.6s ease-out;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        h2 {
+            text-align: center;
+            color: #00796b;
+            margin-bottom: 25px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #26a69a;
+            background-color: #fff;
+            transform: scale(1.02);
+            box-shadow: 0 0 5px rgba(38, 166, 154, 0.4);
+        }
+
+        button {
+            width: 100%;
+            background: #26a69a;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background: #1e8e82;
+            transform: scale(1.02);
+        }
+
+        #goToForumBtn {
+            background-color: #833923;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        #goToForumBtn:hover {
+            background-color: #931507;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .message.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .success {
+            background-color: #c8e6c9;
+            color: #256029;
+        }
+
+        .error {
+            background-color: #ffcdd2;
+            color: #b71c1c;
+        }
+
+        .review-display {
+            margin-top: 30px;
+        }
+
+        .review {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 4px solid #26a69a;
+            background-color: #f1f8f9;
+            border-radius: 10px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .review p {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+
+        .stars {
+            color: gold;
+            font-size: 18px;
+            text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Оставьте отзыв</h2>
+    <input type="text" id="clinicName" placeholder="Название клиники">
+    <input type="text" id="doctorName" placeholder="Имя доктора">
+    <input type="number" id="rating" placeholder="Оценка (1-5)" min="1" max="5">
+    <textarea id="content" rows="4" placeholder="Ваш отзыв..."></textarea>
+    <button onclick="sendReview()">Отправить</button>
+    <div id="response" class="message"></div>
+
+    <label for="ratingFilter">Фильтр по оценкам:</label>
+    <select id="ratingFilter" onchange="applyFilter()">
+        <option value="all">Все</option>
+        <option value="positive">Положительные (4–5)</option>
+        <option value="neutral">Нейтральные (3)</option>
+        <option value="negative">Отрицательные (1–2)</option>
+    </select>
+
+    <div id="reviewDisplay" class="review-display"></div>
+
+    <button id="goToForumBtn">Перейти на форум</button>
+</div>
+
+<script>
+    let allReviews = [];
+
+    window.onload = function () {
+        fetchReviews();
+    };
+
+    function fetchReviews() {
+        fetch('http://localhost:8080/api/reviews')
+            .then(response => response.json())
+            .then(data => {
+            allReviews = data;
+            applyFilter();
+        })
+            .catch(error => {
+            console.error('Ошибка загрузки отзывов:', error);
+        });
+    }
+
+    function sendReview() {
+        const clinicName = document.getElementById('clinicName').value;
+        const doctorName = document.getElementById('doctorName').value;
+        const rating = parseInt(document.getElementById('rating').value);
+        const content = document.getElementById('content').value;
+        const responseBox = document.getElementById('response');
+
+        if (!clinicName || !doctorName || !rating || !content) {
+            responseBox.innerText = "Пожалуйста, заполните все поля.";
+            responseBox.className = 'message error show';
+            return;
+        }
+
+        const newReview = {
+            clinicName,
+            doctorName,
+            rating,
+            comment: content
+        };
+
+        fetch('http://localhost:8080/api/reviews', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newReview)
+        })
+            .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text) });
+            }
+            return response.json();
+        })
+            .then(data => {
+            responseBox.innerText = "Отзыв успешно отправлен!";
+            responseBox.className = 'message success show';
+
+            allReviews.unshift(newReview);
+            applyFilter();
+
+            document.getElementById('clinicName').value = '';
+            document.getElementById('doctorName').value = '';
+            document.getElementById('rating').value = '';
+            document.getElementById('content').value = '';
+        })
+            .catch(error => {
+            responseBox.innerText = "Ошибка: " + error.message;
+            responseBox.className = 'message error show';
+        });
+    }
+
+    function applyFilter() {
+        const filterValue = document.getElementById('ratingFilter').value;
+        const reviewDisplay = document.getElementById('reviewDisplay');
+        reviewDisplay.innerHTML = '';
+
+        let filtered = allReviews;
+
+        if (filterValue === "positive") {
+            filtered = allReviews.filter(r => r.rating >= 4);
+        } else if (filterValue === "neutral") {
+            filtered = allReviews.filter(r => r.rating === 3);
+        } else if (filterValue === "negative") {
+            filtered = allReviews.filter(r => r.rating <= 2);
+        }
+
+        filtered.forEach(review => addReviewToDOM(review));
+    }
+
+    function addReviewToDOM(review) {
+        const reviewDisplay = document.getElementById('reviewDisplay');
+        const div = document.createElement('div');
+        div.className = 'review';
+        div.innerHTML = `
+            <p><strong>Клиника:</strong> ${review.clinicName}</p>
+            <p><strong>Доктор:</strong> ${review.doctorName}</p>
+            <p><strong>Оценка:</strong> <span class="stars">${'★'.repeat(review.rating)}${''.repeat(5 - review.rating)}</span></p>
+            <p><strong>Комментарий:</strong> ${review.comment}</p>
+        `;
+        reviewDisplay.prepend(div);
+    }
+
+    document.getElementById("goToForumBtn").addEventListener("click", function () {
+        window.location.href = "index2.html";
+    });
+</script>
+</body>
+</html>
