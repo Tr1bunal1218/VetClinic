@@ -1,0 +1,6 @@
+[submodule "docker"]
+	path = docker
+	url = git@github.com:redis-developer/redismod-docker-compose.git
+[submodule "redismod-docker-compose"]
+	path = redismod-docker-compose
+	url = https://github.com/redis-developer/redismod-docker-compose.git
