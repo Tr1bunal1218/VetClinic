@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+          http://www.liquibase.org/xml/ns/dbchangelog
+          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="you">
+        <createTable tableName="pet_profile">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="breed" type="VARCHAR(255)"/>
+            <column name="has_allergy" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="you">
+        <createTable tableName="reminder">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="pet_id" type="UUID"/>
+            <column name="type" type="VARCHAR(100)"/>
+            <column name="remind_date" type="DATE"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="you">
+        <createTable tableName="recommendation">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="pet_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="VARCHAR(500)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="you">
+        <addForeignKeyConstraint
+                baseTableName="recommendation"
+                baseColumnNames="pet_id"
+                referencedTableName="pet_profile"
+                referencedColumnNames="id"
+                constraintName="fk_recommendation_pet"/>
+    </changeSet>
+</databaseChangeLog>
